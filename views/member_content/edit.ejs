@@ -1,0 +1,112 @@
+<%- include('../parts/header.ejs') %>
+  <%- include('../parts/navbar.ejs') %>
+
+    <style>
+      form .mb-3 .form-text {
+        color: red;
+      }
+    </style>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">編輯資料</h5>
+              <form name="form1" method="post" onsubmit="sendForm(event)">
+                <div class="mb-3">
+                  <label for="name" class="form-label">姓名</label>
+                  <input type="text" class="form-control" id="name" name="name" value="<%= name %>" />
+                  <div class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">信箱</label>
+                  <input type="text" class="form-control" id="email" name="email" value="<%= email %>" />
+                  <div class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                  <label for="birthday" class="form-label">生日</label>
+                  <input type="date" class="form-control" id="birthday" name="birthday" value="<%= birthday %>" />
+                  <div class="form-text"></div>
+                </div>
+                <div class="mb-3">
+                  <label for="created_at" class="form-label">創建時間</label>
+                  <input type="date" class="form-control" id="created_at" name="created_at" value="<%= created_at %>" />
+                  <div class="form-text"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">編輯</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">已成功編輯一筆資料</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-success" role="alert">你要繼續編輯嗎？</div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              繼續編輯
+            </button>
+            <a type="button" class="btn btn-primary" href="/member_content">回到列表</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('../parts/script.ejs') %>
+
+      <script>
+
+        // // sendForm函式開始
+        const sendForm = (e) => {
+          e.preventDefault();
+
+          let isPass = true;
+
+          // 傳送資料
+          if (isPass) {
+            const fd = new FormData(document.form1)
+            const newfd = new URLSearchParams(fd)
+
+            fetch('', {
+              method: 'PUT',
+              body: newfd.toString(),
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
+            })
+              .then((r) => r.json())
+              .then((result) => {
+
+                console.log({ result });
+
+                if (result.success) {
+                  myModal.show()
+                }
+                else {
+                  for (let k in result.errors) {
+                    const warning = document.form1[k]
+                    warning.style.border = "1px solid red";
+                    warning.nextElementSibling.innerHTML = result.errors[k];
+                  }
+                }
+              }
+              )
+              .catch((ex) => console.log(ex));
+          }
+        }
+        const myModal = new bootstrap.Modal(document.getElementById("exampleModal"));
+
+      </script>
+
+      <%- include('../parts/footer.ejs') %>

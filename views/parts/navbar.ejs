@@ -1,0 +1,50 @@
+<style>
+  .navbar-collapse>ul>li>.nav-link.active {
+    background-color: #0d6efd;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+    border-radius: 8px;
+  }
+</style>
+
+<div class="container">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">首頁</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link <%= pageName === "memberList" ? "active":"" %>" href="/member_content">會員名單</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= pageName === "addMember" ? "active":"" %>" href="/member_content/add">新增會員</a>
+          </li>
+        </ul>
+
+        <!-- 登入系統 -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <% if (session && session.admin){ %>
+            <a class="nav-link" aria-current="page"><%= session.admin.name %></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/logout?u=<%= originalUrl%>">登出</a>
+          </li>
+          <%} else {%>
+          <li class="nav-item">
+            <a class="nav-link <%= pageName === "login" ? "active":"" %>" aria-current="page" href="/login?u=<% originalUrl%>">登入</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= pageName === "register" ? "active":"" %>" aria-current="page" href="/register">註冊</a>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</div>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <form name="form1">
+    <label>上傳圖片</label>
+    <input type="file" name="images" accept="image/png,image/jpeg,image/webp" multiple>
+  </form>
+  <div class="container"></div>
+
+  <script>
+    let photoUpload = document.querySelector('form>input[name=images]')
+    let container = document.querySelector('.container')
+
+    photoUpload.addEventListener('change', (e) => {
+      if (photoUpload.files.length < 1) {
+        e.preventDefault()
+        return
+      }
+
+      container.innerHTML = [...photoUpload.files].map((file) => {
+        const url = URL.createObjectURL(photoUpload.files[0])
+
+        return `
+        <img src="${url}" alt="">
+        `
+      }).join('')
+    })
+
+
+  </script>
+</body>
+
+</html>
