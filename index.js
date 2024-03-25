@@ -5,6 +5,7 @@ import db from './route/mysql-connect.js'
 import exampleRouter from './route/memberFromSQL.js'
 import bcrypt from 'bcryptjs'
 import mySQLsession from 'express-mysql-session'
+import cors from 'cors'
 
 let app = express()
 let sqlStore = mySQLsession(session)
@@ -14,6 +15,14 @@ app.set('view engine', 'ejs')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// cors
+const corsOptions = {
+  credentials: true,
+  origin: (origin, callback) => {
+    callback(null, true)
+  }
+}
+app.use(cors(corsOptions));
 
 // Session
 app.use(session({
