@@ -7,13 +7,13 @@ const router = express.Router()
 
 // 白名單
 router.use((req, res, next) => {
-  let whiteList = ["/", '/api']
-  let path = req.url.split('?')[0]
-  if (!whiteList.includes(path)) {
-    if (!req.session.admin) {
-      return res.redirect(`/login?u=${req.originalUrl}`)
-    }
-  }
+  // let whiteList = ["/", '/api']
+  // let path = req.url.split('?')[0]
+  // if (!whiteList.includes(path)) {
+  //   if (!req.session.admin) {
+  //     return res.redirect(`/login?u=${req.originalUrl}`)
+  //   }
+  // }
   next()
 })
 
