@@ -226,17 +226,14 @@ router.delete('/:user_id', async (req, res, next) => {
   res.json(output)
 })
 
-// 編輯會員-路由
-router.get('/edit/:user_id', async (req, res) => {
-  res.locals.title = res.locals.title + "- 編輯";
-  res.locals.pageName = "editMember";
-
+// 編輯會員-路由(串前端)
+router.get('/:user_id', async (req, res) => {
   let user_id = +req.params.user_id || 0;
   let sql = `SELECT * FROM mb_user WHERE user_id=? `
   let [result] = await db.query(sql, [user_id])
 
   if (!result.length) {
-    return res.redirect("/member_content")
+    return res.json({ success: false, mesage: "沒有該筆資料" })
   }
 
   const timeFormat = "YYYY-MM-DD"
@@ -249,23 +246,71 @@ router.get('/edit/:user_id', async (req, res) => {
     result[0].created_at = dayjs(result[0].created_at).format(timeFormat)
   }
 
-  res.render('member_content/edit', result[0])
+  res.json({ success: true, data: result[0] })
 })
 
-// 編輯會員-編輯
+// 編輯會員-編輯(連前端)
 router.put('/edit/:user_id', async (req, res) => {
   let user_id = +req.params.user_id || 0;
   let sql = `UPDATE mb_user SET ? WHERE user_id=? `
-  let [result] = await db.query(sql, [req.body, user_id])
 
-  let output = {
+  const output = {
     success: false,
     bodyData: req.body,
     error: "",
   }
 
-  output.success = !!result.changedRows
+  try {
+    let [result] = await db.query(sql, [req.body, user_id])
+    output.success = !!result.changedRows
+  }
+  catch (error) {
+    console.error(error);
+  }
+
   res.json(output)
 })
+
+// 編輯會員-路由(純後端)
+// router.get('/edit/:user_id', async (req, res) => {
+//   res.locals.title = res.locals.title + "- 編輯";
+//   res.locals.pageName = "editMember";
+
+//   let user_id = +req.params.user_id || 0;
+//   let sql = `SELECT * FROM mb_user WHERE user_id=? `
+//   let [result] = await db.query(sql, [user_id])
+
+//   if (!result.length) {
+//     return res.redirect("/member_content")
+//   }
+
+//   const timeFormat = "YYYY-MM-DD"
+
+//   if (result[0].birthday) {
+//     result[0].birthday = dayjs(result[0].birthday).format(timeFormat)
+//   }
+
+//   if (result[0].created_at) {
+//     result[0].created_at = dayjs(result[0].created_at).format(timeFormat)
+//   }
+
+//   res.render('member_content/edit', result[0])
+// })
+
+// 編輯會員-編輯(純後端)
+// router.put('/edit/:user_id', async (req, res) => {
+//   let user_id = +req.params.user_id || 0;
+//   let sql = `UPDATE mb_user SET ? WHERE user_id=? `
+//   let [result] = await db.query(sql, [req.body, user_id])
+
+//   let output = {
+//     success: false,
+//     bodyData: req.body,
+//     error: "",
+//   }
+
+//   output.success = !!result.changedRows
+//   res.json(output)
+// })
 
 export default router
